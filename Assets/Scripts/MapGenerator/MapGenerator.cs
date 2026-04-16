@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System;
 
 /// <summary>
 /// 多瓦片结构所在的层级：遮蔽层、碰撞层

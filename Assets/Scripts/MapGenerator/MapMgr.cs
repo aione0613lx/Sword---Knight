@@ -9,7 +9,7 @@ public class MapMgr : SingletonMono<MapMgr>
     public Dictionary<Vector2Int, Chunk> mapChunks = new Dictionary<Vector2Int, Chunk>();
     public MultiTileSO[] multiTiles;
 
-    [Header("»ù´¡Tile")]
+    [Header("åŸºç¡€Tile")]
     public TileBase sandTile;
     public TileBase grassTile;
     public TileBase waterTile;
@@ -23,7 +23,7 @@ public class MapMgr : SingletonMono<MapMgr>
     public Tilemap coverMap;
     public Tilemap colliderMap;
 
-    [Header("ÔëÉùÍ¼ÊıÖµÉèÖÃ")]
+    [Header("å™ªå£°å›¾æ•°å€¼è®¾ç½®")]
     public int width;
     public int height;
     public bool useSeed;
@@ -35,11 +35,12 @@ public class MapMgr : SingletonMono<MapMgr>
     {
         Init();
         CreatMap();
+        
     }
 
     public void Init()
     {
-        // ÓÅ»¯£ºÏÈÏú»ÙÒÑ´æÔÚµÄ×Ó¶ÔÏó£¬±ÜÃâÖØ¸´´´½¨
+        // ä¼˜åŒ–ï¼šå…ˆé”€æ¯å·²å­˜åœ¨çš„å­å¯¹è±¡ï¼Œé¿å…é‡å¤åˆ›å»º
         foreach (Transform child in transform)
         {
             if (Application.isPlaying)
@@ -48,14 +49,14 @@ public class MapMgr : SingletonMono<MapMgr>
                 DestroyImmediate(child.gameObject);
         }
 
-        // ´´½¨ Tilemap ¶ÔÏó
+        // åˆ›å»º Tilemap å¯¹è±¡
         backGround = CreateTilemapChild("BackGround", false);
         waterGround = CreateTilemapChild("WaterGround", false);
         coverMap = CreateTilemapChild("CoverMap", false);
         colliderMap = CreateTilemapChild("ColliderMap", true);
     }
 
-    // ÓÅ»¯£º·â×° Tilemap ´´½¨Âß¼­
+    // ä¼˜åŒ–ï¼šå°è£… Tilemap åˆ›å»ºé€»è¾‘
     private Tilemap CreateTilemapChild(string name, bool addCollider)
     {
         GameObject go = new GameObject(name);
@@ -71,17 +72,17 @@ public class MapMgr : SingletonMono<MapMgr>
 
     public void CreatMap()
     {
-        // 1.Éú³ÉÔëÉùÍ¼
+        // 1.ç”Ÿæˆå™ªå£°å›¾
         noiseTable = MapGenerator.GeneratePerlinNoise(width, height, useSeed, seed, lacunarity);
         if (noiseTable == null) return;
 
-        // 2.»æÖÆÍßÆ¬µØÍ¼
+        // 2.ç»˜åˆ¶ç“¦ç‰‡åœ°å›¾
         MapGenerator.TileMapGenerator(noiseTable, width, height);
 
-        // 3.»®·ÖÇø¿é
+        // 3.åˆ’åˆ†åŒºå—
         MapGenerator.DivideChunk(CHUNK_SIZE, width, height, mapChunks);
 
-        // 4.Éú³É½á¹¹
+        // 4.ç”Ÿæˆç»“æ„
         MapGenerator.MultiTilePlace(noiseTable, multiTiles, 0.2f, width, height);
     }
 

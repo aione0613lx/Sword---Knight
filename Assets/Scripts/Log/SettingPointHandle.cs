@@ -8,6 +8,8 @@ public class SettingPointHandle : MonoBehaviour, IPointerClickHandler
     private RectTransform rectTransform;
     private Tweener moveTweener;       // 当前按钮的动画
 
+    public GameObject setting;
+
     [Header("调试")]
     [SerializeField] private bool debugMode = true;
 
@@ -57,6 +59,12 @@ public class SettingPointHandle : MonoBehaviour, IPointerClickHandler
         if (debugMode) Debug.Log($"[{gameObject.name}] 从 {generator.lastOriginalPos} 移动到 {targetPos}");
 
         MoveToPosition(targetPos);
+
+        foreach (var setting in generator.settings)
+        {
+            setting.SetActive(false);
+        }
+        setting.SetActive(true);
     }
 
     /// <summary>

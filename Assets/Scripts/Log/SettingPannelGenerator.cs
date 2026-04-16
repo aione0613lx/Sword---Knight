@@ -4,7 +4,7 @@ using UnityEngine;
 public class SettingPannelGenerator : MonoBehaviour
 {
     [Header("引用")]
-    public GameObject[] showSettingPannel; // 对应要显示的面板
+    public GameObject[] settings;
 
     [Header("移动参数")]
     public float moveDistance = 50f;
