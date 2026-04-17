@@ -31,13 +31,6 @@ public class MapMgr : SingletonMono<MapMgr>
     public float lacunarity;
     public float[,] noiseTable;
 
-    private void Start()
-    {
-        Init();
-        CreatMap();
-        
-    }
-
     public void Init()
     {
         // 优化：先销毁已存在的子对象，避免重复创建
@@ -54,6 +47,8 @@ public class MapMgr : SingletonMono<MapMgr>
         waterGround = CreateTilemapChild("WaterGround", false);
         coverMap = CreateTilemapChild("CoverMap", false);
         colliderMap = CreateTilemapChild("ColliderMap", true);
+
+        coverMap.GetComponent<TilemapRenderer>().sortingOrder = 5;
     }
 
     // 优化：封装 Tilemap 创建逻辑
@@ -92,5 +87,19 @@ public class MapMgr : SingletonMono<MapMgr>
         waterGround?.ClearAllTiles();
         coverMap?.ClearAllTiles();
         colliderMap?.ClearAllTiles();
+    }
+
+    public int GetTerrainType(int x,int y)
+    {
+        if(MapMgr.Instance == null || x >= width || y >= height)
+        {
+            Debug.Log("超出边界或MapMgr不存在");
+        }
+
+        float v = noiseTable[x,y];
+        if(v < sandValue) return 0;
+        else if( v < sandValue) return 1;
+        else if( v < waterValue) return 0;
+        else return 2;
     }
 }

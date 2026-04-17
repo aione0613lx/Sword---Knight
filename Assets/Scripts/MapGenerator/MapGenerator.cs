@@ -385,7 +385,7 @@ public static class MapGenerator
     /// <summary>
     /// 返回当前地块的地形类型（优化：传入阈值参数，减少对 MapMgr 的依赖）
     /// </summary>
-    private static int GetTerrainType(float v, float sandValue, float grassValue, float waterValue)
+    public static int GetTerrainType(float v, float sandValue, float grassValue, float waterValue)
     {
         if (v < sandValue) return 0;
         else if (v < grassValue) return 1;

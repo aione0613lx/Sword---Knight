@@ -4,8 +4,8 @@ using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
-{
-    [SerializeField] private float moveSpeed = 5f;
+{   
+    [SerializeField] private PlayerStatsSO playerSO;
     private bool isFacingRight = true;
     private Vector2 moveInput;
     [SerializeField]private bool allowMove = true;
@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
             Flip();
         }
 
-        transform.position += (Vector3)moveInput * moveSpeed * Time.deltaTime;
+        transform.position += (Vector3)moveInput * playerSO.speed * Time.deltaTime;
     }
 
     private void Flip()
