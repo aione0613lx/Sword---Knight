@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ public class GameManager : SingletonMono<GameManager>
 {   
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Vector3 locateSpwanPoint;
+    [SerializeField] private CinemachineVirtualCamera virtualCamera;
+    [SerializeField] public PlayerStatsSO playerSO;
     private GameObject player;
 
     private void Start() {
@@ -29,9 +32,22 @@ public class GameManager : SingletonMono<GameManager>
         player = Instantiate(playerPrefab,locateSpwanPoint,quaternion.identity);
         player.SetActive(true);
         if(player.GetComponent<PlayerController>() == null) player.AddComponent<PlayerController>();
+        if(player.GetComponent<PlayerHealth>() == null) player.AddComponent<PlayerHealth>();
+        if(playerSO == null)
+        {
+            //TODO:新建一个PlayerStatsSO文件并为其初始化
+        }
+        player.GetComponent<PlayerController>().playerSO = playerSO;
+        player.GetComponent<PlayerHealth>().playerSO = playerSO;
         //3.创建一个虚拟摄像机，并让它跟随Player
         
-        //.管理游戏进程：
+        if(virtualCamera == null)
+        {
+            //TODO 创建一个虚拟摄像机
+        }
+        virtualCamera.Follow = player.transform;
+
+        //4.管理游戏进程：
     }
 
     private void LocateSpawnPoint()

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4868f92a923f0674cbb152391741323c, type: 3}
+  m_Name: MaxHPBoost 3
+  m_EditorClassIdentifier: 
+  skillName: MaxHPBoost3
+  curLevel: 0
+  maxLevel: 5
+  needPoint: 1
+  isUnlock: 0
+  icon: {fileID: 374495580, guid: 080cb6d98b00c2645b2c41df5f69bc78, type: 3}
