@@ -51,6 +51,17 @@ public static class EventCenter
         }
         eventTable[eventName] = (eventTable[eventName] as Action<T1, T2>) + callback;
     }
+
+    /// <summary>
+    /// 添加一个无参有返回值的监听者
+    /// </summary>
+    public static void AddListener<TResult>(string eventName, Func<TResult> callback)
+    {
+        if (!eventTable.ContainsKey(eventName))
+            eventTable[eventName] = callback;
+        else
+            eventTable[eventName] = Delegate.Combine(eventTable[eventName], callback);
+    }
     #endregion
 
     #region 取消订阅事件（注销监听）
@@ -83,6 +94,36 @@ public static class EventCenter
         if (eventTable.TryGetValue(eventName, out var del))
         {
             var newDel = (del as Action<T>) - callback;
+            if (newDel == null)
+                eventTable.Remove(eventName);
+            else
+                eventTable[eventName] = newDel;
+        }
+    }
+
+    /// <summary>
+    /// 移除带两个参数事件监听
+    /// </summary>
+    public static void RemoveListener<T1,T2>(string eventName, Action<T1,T2> callback)
+    {
+        if (eventTable.TryGetValue(eventName, out var del))
+        {
+            var newDel = (del as Action<T1,T2>) - callback;
+            if (newDel == null)
+                eventTable.Remove(eventName);
+            else
+                eventTable[eventName] = newDel;
+        }
+    }
+
+    /// <summary>
+    /// 移除一个无参有返回值的监听者
+    /// </summary>
+    public static void RemoveListener<TResult>(string eventName, Func<TResult> callback)
+    {
+        if (eventTable.TryGetValue(eventName, out Delegate del))
+        {
+            Delegate newDel = Delegate.Remove(del, callback);
             if (newDel == null)
                 eventTable.Remove(eventName);
             else
@@ -124,7 +165,68 @@ public static class EventCenter
             (del as Action<T1, T2>)?.Invoke(param1, param2);
         }
     }
+
+    /// <summary>
+    /// 触发无参有返回值的事件，返回最后一个监听者的结果
+    /// </summary>
+    /// <typeparam name="TResult">返回值类型</typeparam>
+    /// <param name="eventName">事件名</param>
+    /// <returns>最后一个监听者的返回值，若无监听者则返回 default(TResult)</returns>
+    public static TResult EventTrigger<TResult>(string eventName)
+    {
+        if (eventTable.TryGetValue(eventName, out Delegate del))
+        {
+            // 多个委托时，依次调用，但只返回最后一个结果（符合委托链语义）
+            if (del is Func<TResult> func)
+                return func.Invoke();
+
+            // 若委托链中包含多个 Func<TResult>，需要逐个调用并返回最后一个
+            Delegate[] invocationList = del.GetInvocationList();
+            TResult result = default(TResult);
+            foreach (Delegate d in invocationList)
+            {
+                if (d is Func<TResult> f)
+                    result = f.Invoke();
+            }
+            return result;
+        }
+        return default(TResult);
+    }
+
+    /// <summary>
+    /// 触发无参有返回值的事件，并通过 out 参数指示是否有监听者被调用
+    /// </summary>
+    /// <typeparam name="TResult">返回值类型</typeparam>
+    /// <param name="eventName">事件名</param>
+    /// <param name="hasListener">输出：是否有至少一个监听者</param>
+    /// <returns>最后一个监听者的返回值，若无监听者则返回 default(TResult)</returns>
+    public static TResult EventTrigger<TResult>(string eventName, out bool hasListener)
+    {
+        if (eventTable.TryGetValue(eventName, out Delegate del))
+        {
+            hasListener = true;
+            Delegate[] invocationList = del.GetInvocationList();
+            TResult result = default(TResult);
+            foreach (Delegate d in invocationList)
+            {
+                if (d is Func<TResult> f)
+                    result = f.Invoke();
+            }
+            return result;
+        }
+        hasListener = false;
+        return default(TResult);
+    }
     #endregion
+
+    /// <summary>
+    /// 清空指定事件的所有监听者
+    /// </summary>
+    public static void ClearEvent(string eventName)
+    {
+        if (eventTable.ContainsKey(eventName))
+            eventTable.Remove(eventName);
+    }
 
     /// <summary>
     /// 清空所有事件（场景切换时必用，防止内存泄漏）
@@ -133,4 +235,6 @@ public static class EventCenter
     {
         eventTable.Clear();
     }
+
+
 }

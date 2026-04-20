@@ -16,12 +16,12 @@ public class StatsModel
 
     public StatsModel()
     {
-        level = 1;
-        hP = 1;
-        aTK = 1;
-        dEF = 1;
-        speed = 1;
-        grow = 1;
+        level = 0;
+        hP = 0;
+        aTK = 0;
+        dEF = 0;
+        speed = 0;
+        grow = 0;
     }
 
     public int Level {
@@ -102,7 +102,7 @@ public class StatsModel
         set {
             if(grow != value)
             {
-                speed = value;
+                grow = value;
                 OnChangeStats(StatsType.Grow,grow);
             }
         }

@@ -16,17 +16,17 @@ public class StatsView : MonoBehaviour
     {
         switch (statsType)
         {
-            case StatsType.Level : levelText.text = "Lev:" + value.ToString();
+            case StatsType.Level : levelText.text = "等级:" + value.ToString();
             break;
-            case StatsType.HP : hpText.text = "HP:" + value.ToString();
+            case StatsType.HP : hpText.text = "生命:" + value.ToString();
             break;
-            case StatsType.ATK : atkText.text = "ATK:" + value.ToString();
+            case StatsType.ATK : atkText.text = "攻击:" + value.ToString();
             break;
-            case StatsType.DEF : defText.text = "DEF" + value.ToString();
+            case StatsType.DEF : defText.text = "防御:" + value.ToString();
             break;
-            case StatsType.Speed : speedText.text = "SPE" + value.ToString();
+            case StatsType.Speed : speedText.text = "速度:" + value.ToString();
             break;
-            case StatsType.Grow : growText.text = "GRO" + value.ToString();
+            case StatsType.Grow : growText.text = "经验:" + value.ToString();
             break;
         }
     }

@@ -17,3 +17,4 @@ MonoBehaviour:
   duration: 0
   waress:
   - {fileID: 11400000, guid: 6a4b72fadd0afb1498b925ca8e1b8c5b, type: 2}
+  - {fileID: 11400000, guid: 3d8fee6f11aa2ab4389657f717bb3780, type: 2}

@@ -9,5 +9,6 @@ public class WaresDataSO : ScriptableObject
     public int waresID;
     public int cost;
     public Sprite waresIcon;
+    public string effect;//使用该物品的效果，用事件调用
 
 }

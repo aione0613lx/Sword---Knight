@@ -15,8 +15,6 @@ public class LogManager : SingletonMono<LogManager>
     public Ease easeType = Ease.OutCubic;
 
     private Tweener panelTweener; // 用于防止动画冲突
-
-    public SettingConfigSO config;
     
     public void GameStartGenerator()
     {

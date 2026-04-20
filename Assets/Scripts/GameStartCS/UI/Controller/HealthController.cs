@@ -14,13 +14,14 @@ public class HealthController : MonoBehaviour
 
         healthModel.OnChangeHPText += healthView.UpdateText;
 
+        EventCenter.AddListener<PlayerStatsSO>(EventNameTable.ONSEEDPLAYERSO,SetPlayerSO);
         EventCenter.AddListener<int>(EventNameTable.ONCHANGEHP,SetHP);
         EventCenter.AddListener<int>(EventNameTable.ONCHANGEMAXHP,SetMaxHP);
     }
 
-    private void Start()
+    private void SetPlayerSO(PlayerStatsSO playerSO)
     {
-        playerSO = GameManager.Instance.playerSO;
+        this.playerSO = playerSO;
         healthModel.CurrentHP = playerSO.currentHP;
         healthModel.MaxHP = playerSO.maxHP;
     }
@@ -38,6 +39,7 @@ public class HealthController : MonoBehaviour
     private void OnDestroy() 
     {
         healthModel.OnChangeHPText -= healthView.UpdateText;   
+        EventCenter.RemoveListener<PlayerStatsSO>(EventNameTable.ONSEEDPLAYERSO,SetPlayerSO);
         EventCenter.RemoveListener<int>(EventNameTable.ONCHANGEHP,SetHP); 
         EventCenter.RemoveListener<int>(EventNameTable.ONCHANGEMAXHP,SetMaxHP);
     }

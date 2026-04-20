@@ -27,4 +27,20 @@ public static class MathTool
         if (finalDamage < 1f) finalDamage = 1f;
         return Mathf.RoundToInt(finalDamage);
     }
+
+    /// <summary>
+    /// 根据ID查询对应的Item路径
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public static string WaresIDQuery(int id)
+    {
+        switch(id)
+        {
+            case 0 : return "SO/Items/Beef";
+            case 1 : return "SO/Itesm/KnightBadge";
+            default :
+            return null;
+        }
+    }
 }

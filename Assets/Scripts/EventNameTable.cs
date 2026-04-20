@@ -14,6 +14,8 @@ public static class EventNameTable
     public const string ONEXPMAXBOOST = "OnExpMaxBoost";
     public const string ONEXPCURUPDATE = "OnExpCurUpdate";
     public const string ONLEVELBOOST = "OnLevelBoost";
+    public const string ONSEEDPLAYERHEALTH = "OnSeedPlayerHealth";
+    public const string ONSEEDPLAYERSO = "OnSeedPlayerSO";
 
     //与敌人有关的事件
     public const string ONENEMYDIE = "OnEnemyDie";
@@ -27,4 +29,14 @@ public static class EventNameTable
     //与背包有关的事件
     public const string ONGOLDCHANGE = "OnGoldChange";
     public const string ONITEMSCHANGE = "OnItemsChange";
+
+    //与使用Item有关的事件
+    public const string ONUSEBEFF = "OnUseBeef";
+    public const string ONUSEBADGE = "OnUseBadge";
+
+    //与DieCanvas有关的事件
+    public const string ONREVIVEBUTTONDOWN = "OnReviveButtonDown";
+
+    //与技能有关的事件
+    public const string ONTELLSKILLUIUPDATE = "OnTellSkillUIUpdate";
 }

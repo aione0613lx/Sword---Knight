@@ -53,6 +53,12 @@ public class SkillSlotModel
         }
     }
 
+    public int MaxLevel {
+        get {
+            return maxLevel;
+        }
+    }
+
     public bool IsUnlock {
         get {
             return isUnlock;

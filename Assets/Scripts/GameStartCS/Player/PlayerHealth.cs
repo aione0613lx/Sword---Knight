@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {   
     public PlayerStatsSO playerSO;
+    
 
     private void Start() 
     {
@@ -40,9 +41,24 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    private void Die()
+    public void Revive()
     {
+        playerSO.currentHP = playerSO.maxHP;
+        EventCenter.EventTrigger<int>(EventNameTable.ONCHANGEHP,playerSO.currentHP);
+    }
+
+    private void Die()
+    {   
+        Debug.Log("Player die");
         //TODO:处理玩家死亡逻辑
+        if(GameManager.Instance == null)
+        {
+            Debug.Log("GameManager为空");
+            return;
+        }
+        GameManager.Instance.MainCanvas = false;
+        GameManager.Instance.DieCanvas = true;
+        Time.timeScale = 0;
     }
 
     public void UpdatePlayerMaxHP(int value)
@@ -105,6 +121,11 @@ public class PlayerHealth : MonoBehaviour
     public void LevelBoost()
     {
         playerSO.level ++;
+        playerSO.maxHP += 2;
+        playerSO.defense ++;
+        playerSO.skillPoint ++;
+        if(playerSO.level % 2 == 0) playerSO.damage ++;
+
         EventCenter.EventTrigger<int>(EventNameTable.ONLEVELBOOST,playerSO.level);
     }
 }

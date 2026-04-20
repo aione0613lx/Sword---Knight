@@ -20,6 +20,13 @@ public class EXPModel
         level = 1;
     }
 
+    public void InitUI()
+    {
+        OnChangeCurValue?.Invoke(curValue);
+        OnChangeLevel?.Invoke(level);
+        OnChangeMaxValue?.Invoke(maxValue);
+    }
+
     public int MaxValue {
         get {
             return maxValue;

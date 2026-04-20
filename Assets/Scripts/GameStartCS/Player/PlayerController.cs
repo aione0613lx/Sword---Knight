@@ -26,6 +26,10 @@ public class PlayerController : MonoBehaviour
 
     private void Update() 
     {   
+        if(Input.GetButtonDown("AttckPlayer"))
+        {
+            playerHealth.ReceiveDamage(3);
+        }
         
         if(Input.GetButtonDown("OpenShop"))
         {

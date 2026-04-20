@@ -16,6 +16,7 @@ public class EXPController : MonoBehaviour
         expModel.OnChangeMaxValue += expView.SetMaxValue;
         expModel.OnChangeLevel += expView.UpdateLevelText;
 
+        EventCenter.AddListener<PlayerStatsSO>(EventNameTable.ONSEEDPLAYERSO,SetModel);
         EventCenter.AddListener<int>(EventNameTable.ONEXPCURUPDATE,SetCurValue);
         EventCenter.AddListener<int>(EventNameTable.ONEXPMAXBOOST,SetMaxValue);
         EventCenter.AddListener<int>(EventNameTable.ONLEVELBOOST,SetLevel);
@@ -23,9 +24,14 @@ public class EXPController : MonoBehaviour
 
     private void Start() 
     {
-        expModel.MaxValue = GameManager.Instance.playerSO.growExp;
-        expModel.CurValue = GameManager.Instance.playerSO.curExp;
-        expModel.Level = GameManager.Instance.playerSO.level;
+        expModel.InitUI();    
+    }
+
+    public void SetModel(PlayerStatsSO playerSO)
+    {
+        expModel.CurValue = playerSO.curExp;
+        expModel.MaxValue = playerSO.growExp;
+        expModel.Level = playerSO.level;
     }
 
     private void SetLevel(int value)

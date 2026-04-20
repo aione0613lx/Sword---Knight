@@ -29,20 +29,21 @@ public class StatsController : MonoBehaviour
         EventCenter.AddListener<int>(EventNameTable.ONCHANGEDEF,SetModelDEF);
         EventCenter.AddListener<float>(EventNameTable.ONCHANGESPEED,SetModelSpeed);
         EventCenter.AddListener<int>(EventNameTable.ONEXPMAXBOOST,SetModelGrow);
+        EventCenter.AddListener<PlayerStatsSO>(EventNameTable.ONSEEDPLAYERSO,GainPlayerSO);
         
         
     }
 
-    private void Start() 
+    public void GainPlayerSO(PlayerStatsSO playerSO)
     {
-        if(GameManager.Instance == null) return;
+        if(playerSO == null) return;
 
-        statsModel.Level = GameManager.Instance.playerSO.level;
-        statsModel.HP = GameManager.Instance.playerSO.maxHP;
-        statsModel.ATK = GameManager.Instance.playerSO.damage;
-        statsModel.DEF = GameManager.Instance.playerSO.defense;
-        statsModel.Speed = GameManager.Instance.playerSO.speed;
-        statsModel.Grow = GameManager.Instance.playerSO.growExp; 
+        statsModel.Level = playerSO.level;
+        statsModel.HP = playerSO.maxHP;
+        statsModel.ATK = playerSO.damage;
+        statsModel.DEF = playerSO.defense;
+        statsModel.Speed = playerSO.speed;
+        statsModel.Grow = playerSO.growExp; 
     }
 
     private void OnDestroy() 
@@ -55,6 +56,7 @@ public class StatsController : MonoBehaviour
         EventCenter.RemoveListener<int>(EventNameTable.ONCHANGEDEF,SetModelDEF);
         EventCenter.RemoveListener<float>(EventNameTable.ONCHANGESPEED,SetModelSpeed);
         EventCenter.RemoveListener<int>(EventNameTable.ONEXPMAXBOOST,SetModelGrow);
+        EventCenter.RemoveListener<PlayerStatsSO>(EventNameTable.ONSEEDPLAYERSO,GainPlayerSO);
     }
 
     private void SetModelLevel(int value)
