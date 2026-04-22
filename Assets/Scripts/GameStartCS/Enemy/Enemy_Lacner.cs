@@ -7,24 +7,29 @@ public class Enemy_Lacner : EnemyController
     private enum LacnerState{
         Idel,
         Run,
-        Attack
+        Attack,
+        Return
     }
 
     [Header("移动参数")]
     [SerializeField] private float moveSpeed = 3f;
-    [SerializeField] private float maxChaseDistance = 10f;   // 最大追击距离
-    [SerializeField] private float returnThreshold = 0.5f;   // 返回起始点的距离阈值
+    [SerializeField] private float maxChaseDistance = 15f;
+    [SerializeField] private float returnThreshold = 0.5f;
     [SerializeField] private float attckRange = 1.5f;
     [SerializeField] private bool allowAttack = true;
     [SerializeField] private bool allowMove = true;
     [SerializeField] private float attackGap = 2;
+    [SerializeField] private LayerMask playerLayer;
+    [SerializeField] private float hitRadius = 0.85f;
+    [SerializeField] private Vector2 hitOffset = new Vector2(1.1f, 0f);
 
     private Transform player;
     private bool isFacingRight = true;
-    private bool isReturning = false;    // 是否正在返回起始点
+    private bool isReturning = false;
     private LacnerState lacner = LacnerState.Idel;
     private Rigidbody2D rb;
     private Animator anim;
+    private Vector2 lastHitCenter;
 
     private void Awake()
     {   
@@ -47,36 +52,42 @@ public class Enemy_Lacner : EnemyController
 
     private void Chase()
     {
-        if (player == null) return;
+        if (player == null)
+        {
+            if (isReturning) lacner = LacnerState.Return;
+            else lacner = LacnerState.Idel;
+            return;
+        }
 
         // 计算到玩家的向量与距离
         Vector2 toPlayer = player.position - transform.position;
         float distanceToPlayer = toPlayer.magnitude;
+        float distanceFromStart = Vector2.Distance(transform.position, startPos);
 
-        // 超过最大追击距离 → 放弃追击，返回起始点
-        if (distanceToPlayer > maxChaseDistance)
+        // 超过起始点可追击距离时，放弃追击并返航
+        if (distanceFromStart > maxChaseDistance)
         {
             player = null;
             isReturning = true;
+            lacner = LacnerState.Return;
             return;
         }
 
         if(distanceToPlayer <= attckRange && allowAttack)
         {
             Attack();
+            return;
         }
 
-        // 正常追击
         isReturning = false;
+        lacner = LacnerState.Run;
 
         // 朝向玩家翻转
         if ((toPlayer.x < 0 && isFacingRight) || (toPlayer.x > 0 && !isFacingRight))
             Flip();
         
-        // 移动（归一化方向）
         if(allowMove)
         {   
-            lacner = LacnerState.Run;
             Vector2 moveDir = toPlayer.normalized;
             rb.MovePosition(rb.position + moveDir * moveSpeed * Time.fixedDeltaTime);
         }
@@ -87,6 +98,7 @@ public class Enemy_Lacner : EnemyController
         // 返回起始点逻辑（使用 FixedUpdate 保持物理平滑）
         if (isReturning && player == null)
         {
+            lacner = LacnerState.Return;
             Vector2 toStart = startPos - rb.position;
             float distanceToStart = toStart.magnitude;
 
@@ -94,6 +106,7 @@ public class Enemy_Lacner : EnemyController
             {
                 isReturning = false;
                 rb.MovePosition(startPos);
+                lacner = LacnerState.Idel;
                 return;
             }
 
@@ -110,15 +123,29 @@ public class Enemy_Lacner : EnemyController
     {
         lacner = LacnerState.Attack;
         allowMove = false;
+        float facingX = isFacingRight ? 1f : -1f;
+        lastHitCenter = (Vector2)transform.position + new Vector2(hitOffset.x * facingX, hitOffset.y);
         anim.Play(GetAttackDirection(player.position - transform.position));
         allowAttack = false;
         StartCoroutine(StartDelaySetBool(attackGap));
     }
 
-    private void AttackEndHandle()
+    // Animation Event: 攻击动画结束帧调用
+    public void AttackEndHandle()
     {
         lacner = LacnerState.Idel;
         allowMove = true;
+    }
+
+    // Animation Event: 攻击命中帧调用
+    public void AttackHit()
+    {
+        Collider2D hit = Physics2D.OverlapCircle(lastHitCenter, hitRadius, playerLayer);
+        if (hit == null) return;
+
+        PlayerHealth hp = hit.GetComponent<PlayerHealth>();
+        if (hp == null) return;
+        hp.ReceiveDamage(enemySO.damage);
     }
 
     private IEnumerator StartDelaySetBool(float time)
@@ -140,6 +167,10 @@ public class Enemy_Lacner : EnemyController
             break;
             case LacnerState.Attack:
             anim.SetBool("isRun",false);
+            anim.SetBool("Idel",false);
+            break;
+            case LacnerState.Return:
+            anim.SetBool("isRun",true);
             anim.SetBool("Idel",false);
             break;
         }
@@ -189,8 +220,22 @@ public class Enemy_Lacner : EnemyController
         {
             Debug.Log("发现玩家，开始追击");
             player = other.transform;
-            startPos = transform.position;   // 记录当前位置作为返回点
             isReturning = false;
         }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player")) return;
+        if (player != other.transform) return;
+
+        player = null;
+        isReturning = true;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(lastHitCenter, hitRadius);
     }
 }
