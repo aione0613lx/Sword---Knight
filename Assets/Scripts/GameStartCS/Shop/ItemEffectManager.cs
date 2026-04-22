@@ -16,12 +16,13 @@ public class ItemEffectManager : SingletonMono<ItemEffectManager>
     private bool beedAffot = false;
     private bool badgeAffot = false;
 
-    private void Awake() 
+    protected override void Awake() 
     {   
         base.Awake();
         EventCenter.AddListener<PlayerHealth>(EventNameTable.ONSEEDPLAYERHEALTH,GainPlayerHealth);
         EventCenter.AddListener<bool>(EventNameTable.ONUSEBEFF,UseBeef);
-        EventCenter.AddListener<bool>(EventNameTable.ONUSEBADGE,UseKnightBadge);     
+        EventCenter.AddListener<bool>(EventNameTable.ONUSEBADGE,UseKnightBadge);
+        EventCenter.AddListener<bool>(EventNameTable.ONGAINGOLD,GainGold);     
     }
 
     private void OnDestroy() 
@@ -29,6 +30,7 @@ public class ItemEffectManager : SingletonMono<ItemEffectManager>
         EventCenter.RemoveListener<PlayerHealth>(EventNameTable.ONSEEDPLAYERHEALTH,GainPlayerHealth);
         EventCenter.RemoveListener<bool>(EventNameTable.ONUSEBEFF,UseBeef);
         EventCenter.RemoveListener<bool>(EventNameTable.ONUSEBADGE,UseKnightBadge);
+        EventCenter.RemoveListener<bool>(EventNameTable.ONGAINGOLD,GainGold); 
     }
 
     public void GainPlayerHealth(PlayerHealth playerHealth)
@@ -65,6 +67,12 @@ public class ItemEffectManager : SingletonMono<ItemEffectManager>
         StartCoroutine(EffectCD(10,ItemType.Badge));
 
         return badgeAffot;
+    }
+
+    private bool GainGold()
+    {
+        PlayerBackpack.Instance.Gold += UnityEngine.Random.Range(5,10);
+        return false;
     }
 
     private void UseBadgeEnd()

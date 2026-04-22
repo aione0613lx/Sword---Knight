@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShopPannelModel : MonoBehaviour
+public class ShopPannelModel
 {
     private TraderSO traderSO;
 

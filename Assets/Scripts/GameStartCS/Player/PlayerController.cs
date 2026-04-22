@@ -126,7 +126,7 @@ public class PlayerController : MonoBehaviour
 
         foreach(var hit in hits)
         {
-            EnemyHealth enemy = hit.GetComponent<EnemyHealth>();
+            EnemyController enemy = hit.GetComponent<EnemyController>();
             if(enemy != null)
             {
                 enemy.UpdateHP(-playerSO.damage);

@@ -11,4 +11,11 @@ public class SettingConfigManager : SingletonMono<SettingConfigManager>
 
     public int slot;
     public string saveName;
+    public bool isNew;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        DontDestroyOnLoad(gameObject);
+    }
 }

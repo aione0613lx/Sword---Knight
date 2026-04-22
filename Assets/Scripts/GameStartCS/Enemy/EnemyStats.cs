@@ -6,12 +6,15 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "EnemyStats",menuName = "Creat/SO/EnemyStats")]
 public class EnemyStats : ScriptableObject
 {
+    public int enemyID;
+    public string enemyName;
     public int currentHP;
     public int maxHP;
     public float speed;
     public int damage;
     public int defense;
     public int exp;
+    public int weresID;
 
     public EnemyStats()
     {

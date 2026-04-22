@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[SerializeField]
+[Serializable]
 public class GameSaveData
 {
     public int saveSlot;
@@ -11,18 +12,24 @@ public class GameSaveData
     public PlayerSaveData playerData;
     public PlayerBackpackSavaData playerBackpackSaveData;
     public PlayerSkillTreeSaveData playerSkillTreeSaveData;
+    public TraderSaveData traderSaveData;
+    public EnemySaveData enemySaveData;
     public WorldSaveData worldData;
+    
 }
 
-[SerializeField]
+[Serializable]
 public class WorldSaveData
 {
     public int seed;
     public int gameModel;
+    public int day;
+    public float[] playerPos;
     public float[] localPos;
+    public List<int> mulitiPos;
 }
 
-[SerializeField]
+[Serializable]
 public class PlayerSaveData
 {
     public int level;
@@ -40,7 +47,7 @@ public class PlayerSaveData
     public int skillPoint;
 }
 
-[SerializeField]
+[Serializable]
 public class PlayerBackpackSavaData
 {
     public int gold;
@@ -48,9 +55,24 @@ public class PlayerBackpackSavaData
     public List<int> wareCount;
 }
 
-[SerializeField]
+[Serializable]
 public class PlayerSkillTreeSaveData
 {
     public List<string> skillName;
     public List<int> level;
+}
+
+[Serializable]
+public class TraderSaveData
+{
+    public List<int> traderID;
+    public List<int> day;
+    public List<float> traderPos;  
+}
+
+[Serializable]
+public class EnemySaveData
+{
+    public List<int> enemyID;
+    public List<int> enemyPos;
 }

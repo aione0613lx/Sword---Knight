@@ -6,7 +6,7 @@ using UnityEngine;
 public class TraderSO : ScriptableObject
 {
     public string trderName;
+    public int traderID;
     public int HP;
-    public float duration;
     public List<WaresDataSO> waress;
 }

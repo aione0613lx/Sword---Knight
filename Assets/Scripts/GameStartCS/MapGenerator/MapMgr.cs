@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ public class MapMgr : SingletonMono<MapMgr>
     public const int CHUNK_SIZE = 20;
     public Dictionary<Vector2Int, Chunk> mapChunks = new Dictionary<Vector2Int, Chunk>();
     public MultiTileSO[] multiTiles;
+    public WorldSaveData saveData;
 
     [Header("基础Tile")]
     public TileBase sandTile;
@@ -65,11 +67,11 @@ public class MapMgr : SingletonMono<MapMgr>
         return tilemap;
     }
 
-    public void CreatMap()
+    public int CreatMap()
     {
-        // 1.生成噪声图
-        noiseTable = MapGenerator.GeneratePerlinNoise(width, height, useSeed, seed, lacunarity);
-        if (noiseTable == null) return;
+        // 1.生成噪声图，并获取实际使用的种子
+        noiseTable = MapGenerator.GeneratePerlinNoise(width, height, useSeed, seed, lacunarity, out int actualSeed);
+        if (noiseTable == null) return 0;
 
         // 2.绘制瓦片地图
         MapGenerator.TileMapGenerator(noiseTable, width, height);
@@ -78,7 +80,17 @@ public class MapMgr : SingletonMono<MapMgr>
         MapGenerator.DivideChunk(CHUNK_SIZE, width, height, mapChunks);
 
         // 4.生成结构
-        MapGenerator.MultiTilePlace(noiseTable, multiTiles, 0.2f, width, height);
+        if(!useSeed)
+        {
+            MapGenerator.MultiTilePlace(noiseTable, multiTiles, 0.2f, width, height);
+        }
+        else
+        {   
+            LoadMulitiTiles(saveData.mulitiPos);
+            MapGenerator.LoadMultiTilePlace(mapChunks);
+        }
+
+        return actualSeed;
     }
 
     public void MapClear()
@@ -89,17 +101,40 @@ public class MapMgr : SingletonMono<MapMgr>
         colliderMap?.ClearAllTiles();
     }
 
-    public int GetTerrainType(int x,int y)
+    public int GetTerrainType(int x, int y)
     {
-        if(MapMgr.Instance == null || x >= width || y >= height)
+        if (MapMgr.Instance == null || x >= width || y >= height)
         {
             Debug.Log("超出边界或MapMgr不存在");
+            return -1;
         }
 
-        float v = noiseTable[x,y];
-        if(v < sandValue) return 0;
-        else if( v < sandValue) return 1;
-        else if( v < waterValue) return 0;
-        else return 2;
+        float v = noiseTable[x, y];
+        if (v < sandValue) return 0;        // 沙地
+        else if (v < grassValue) return 1;   // 草地
+        else if (v < waterValue) return 0;   // 沙地
+        else return 2;                       // 水域
+    }
+
+    /// <summary>
+    /// 加载多瓦片结果,
+    /// </summary>
+    /// <param name="poss">传入的是一个int类型的链表，由3n个数据组成，从0开始第一个元素代表这个多瓦片结构的类型，
+    /// 后续相邻的两个元素代表这个多瓦片结构的位置，</param>
+    internal void LoadMulitiTiles(List<int> poss)
+    {
+        for(int index = 0; index < poss.Count - 3; index += 3)
+        {
+            //TODO:先获得对应的多瓦片结构SO
+            string path = MathTool.MulitTileSOIDQuery(poss[index]);
+            MultiTileSO so = ResManager.Instance.Load<MultiTileSO>(path);
+
+            //TODO：获得瓦片位置，并得到对应的chunk
+            Vector2Int pos = new Vector2Int(poss[index + 1],poss[index + 2]);
+            Chunk chunk = MapGenerator.GetChunkOfPos(pos.x,pos.y);
+
+            //TODO：部署数据到mapChunks
+            chunk.chunkHasMultiTile.Add(pos,so);
+        }
     }
 }

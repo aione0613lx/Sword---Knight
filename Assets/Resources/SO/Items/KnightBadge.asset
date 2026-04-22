@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: KnightBadge
   m_EditorClassIdentifier: 
   waresName: KnightBadge
-  waresID: 2
+  waresID: 1
   cost: 5
   waresIcon: {fileID: 21300000, guid: 292791cb9724c5f42a53459142d80df4, type: 3}
   effect: OnUseBadge

@@ -169,7 +169,7 @@ public static class SaveSystem
 /// 存档槽位摘要信息（用于 UI 显示）
 /// </summary>
 [Serializable]
-public struct SaveSlotInfo
+public class SaveSlotInfo
 {
     public int slot;
     public string saveName;

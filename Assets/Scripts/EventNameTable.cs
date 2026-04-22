@@ -25,6 +25,7 @@ public static class EventNameTable
     public const string ONOPENTELLUI = "OnOpenTellUI";
     public const string ONCLOSETELLUI = "OnCloseTellUI";
     public const string ONINTRODUCETRADER = "OnInTroduceTrader";
+    public const string ONTRADERLEAVE = "OnTraderLeave";
 
     //与背包有关的事件
     public const string ONGOLDCHANGE = "OnGoldChange";
@@ -33,10 +34,16 @@ public static class EventNameTable
     //与使用Item有关的事件
     public const string ONUSEBEFF = "OnUseBeef";
     public const string ONUSEBADGE = "OnUseBadge";
+    public const string ONGAINGOLD = "OnGainGold";
 
     //与DieCanvas有关的事件
     public const string ONREVIVEBUTTONDOWN = "OnReviveButtonDown";
 
     //与技能有关的事件
     public const string ONTELLSKILLUIUPDATE = "OnTellSkillUIUpdate";
+
+    //与日期有关的事件
+    public const string ONCALENDARCHANGE = "OnCalendarChange";
+
+    public const string ONTELLSAVEUIUPDATE = "OnTellSaveUIUpdate";
 }

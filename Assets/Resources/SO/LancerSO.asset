@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60440bdb87aeca841ba37854a6c2641d, type: 3}
   m_Name: LancerSO
   m_EditorClassIdentifier: 
+  enemyID: 0
+  enemyName: Lancer
   currentHP: 10
   maxHP: 10
   speed: 3
   damage: 3
   defense: 2
   exp: 3
+  weresID: 0

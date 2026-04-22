@@ -13,20 +13,6 @@ public enum TileHierarchy
     isCollider
 }
 
-/// <summary>
-/// 多瓦片结构的SO文件
-/// </summary>
-[CreateAssetMenu(fileName = "MulitiTileSO", menuName = "Creat/SO/MultiTileSO")]
-public class MultiTileSO : ScriptableObject
-{
-    public int width;
-    public int height;
-    public float probability;
-    public TileBase[] multiTiles;
-    public TileHierarchy[] tileHierarchies;
-    public int[] terrainType;
-    public int minDistance;
-}
 
 public static class MapGenerator
 {
@@ -34,16 +20,27 @@ public static class MapGenerator
     /// 生成二维噪声地图并返回
     /// </summary>
     public static float[,] GeneratePerlinNoise(int width, int height, bool useSeed,
-        int seed, float lacunarity)
+    int seed, float lacunarity, out int usedSeed)
     {
         if (width <= 0 || height <= 0)
         {
             Debug.LogError("边长小于0！");
+            usedSeed = 0;
             return null;
         }
 
-        // 优化：使用 System.Random 替代 UnityEngine.Random，避免与游戏逻辑随机干扰，并保持确定性
-        System.Random random = useSeed ? new System.Random(seed) : new System.Random(Time.time.GetHashCode());
+        // 确定实际使用的种子
+        if (useSeed)
+        {
+            usedSeed = seed;
+        }
+        else
+        {
+            usedSeed = Time.time.GetHashCode();
+        }
+
+        // 使用确定的种子初始化随机数生成器
+        System.Random random = new System.Random(usedSeed);
         float randomOffset = (float)(random.NextDouble() * 20000 - 10000); // 范围 -10000 ~ 10000
 
         float[,] noiseTable = new float[width, height];
@@ -62,7 +59,7 @@ public static class MapGenerator
             }
         }
 
-        // 第二次遍历：归一化到 0~1 范围（优化：合并到第一次遍历中无法实现，因为需要完整的最值）
+        // 第二次遍历：归一化到 0~1 范围
         float range = maxValue - minValue;
         if (range > 0)
         {
@@ -74,8 +71,6 @@ public static class MapGenerator
                 }
             }
         }
-        // 若 range == 0（极罕见情况），保持原值（0.5左右）
-
         return noiseTable;
     }
 
@@ -150,9 +145,9 @@ public static class MapGenerator
     }
 
     /// <summary>
-    /// 根据世界坐标获取所在区块（优化：修复区块索引计算错误）
+    /// 根据世界坐标获取所在区块
     /// </summary>
-    private static Chunk GetChunkOfPos(int x, int y)
+    public static Chunk GetChunkOfPos(int x, int y)
     {
         MapMgr mgr = MapMgr.Instance;
         if (mgr == null) return null;
@@ -160,7 +155,7 @@ public static class MapGenerator
         int chunkX = x / MapMgr.CHUNK_SIZE;
         int chunkY = y / MapMgr.CHUNK_SIZE;
 
-        // 优化：直接使用 TryGetValue 替代 ContainsKey + 取值
+        //直接使用 TryGetValue 替代 ContainsKey + 取值
         mgr.mapChunks.TryGetValue(new Vector2Int(chunkX, chunkY), out Chunk chunk);
         return chunk;
     }
@@ -257,7 +252,7 @@ public static class MapGenerator
     }
 
     /// <summary>
-    /// 创建多瓦片结构（优化：修复索引计算错误）
+    /// 创建多瓦片结构
     /// </summary>
     private static void CreatMulitiTile(int x, int y, MultiTileSO multiTile, bool[,] occupied)
     {
@@ -271,7 +266,6 @@ public static class MapGenerator
         {
             for (int i = 0; i < multiTile.width; i++)
             {
-                // 优化：正确的一维索引计算
                 int index = i + j * multiTile.width;
                 if (index >= multiTile.multiTiles.Length)
                 {
@@ -284,7 +278,7 @@ public static class MapGenerator
 
                 Vector3Int pos = new Vector3Int(x + i, y + j, 0);
 
-                // 优化：根据层级放置到对应 Tilemap
+                //根据层级放置到对应 Tilemap
                 if (multiTile.tileHierarchies[index] == TileHierarchy.isCollider)
                 {
                     colliderMap.SetTile(pos, tile);
@@ -294,7 +288,7 @@ public static class MapGenerator
                     coverMap.SetTile(pos, tile);
                 }
 
-                // 标记占用
+                //标记占用
                 int worldX = x + i;
                 int worldY = y + j;
                 if (worldX < occupied.GetLength(0) && worldY < occupied.GetLength(1))
@@ -391,5 +385,40 @@ public static class MapGenerator
         else if (v < grassValue) return 1;
         else if (v < waterValue) return 0;
         else return 2;
+    }
+
+    /// <summary>
+    /// 加载多瓦片结构
+    /// </summary>
+    /// <param name="mapChunks"></param>
+    public static void LoadMultiTilePlace(Dictionary<Vector2Int,Chunk> mapChunks)
+    {
+        foreach(var chunk in mapChunks.Values)
+        {
+            foreach(var multiTile in chunk.chunkHasMultiTile)
+            {
+                MultiTileSO so = multiTile.Value;
+                Vector2Int startPos = multiTile.Key;
+                int index = 0;
+                for(int i = 0; i < so.height; i ++)
+                {
+                    for(int j = 0; j < so.width; j ++)
+                    {   
+                        Vector3Int pos = new Vector3Int(startPos.x + j,startPos.y + i);
+
+                        if(so.tileHierarchies[index] == TileHierarchy.isCollider)
+                        {
+                            MapMgr.Instance.colliderMap.SetTile(pos,so.multiTiles[index]);
+                        }
+                        else if(so.tileHierarchies[index] == TileHierarchy.isCover)
+                        {
+                            MapMgr.Instance.coverMap.SetTile(pos,so.multiTiles[index]);
+                        }
+
+                        index++;
+                    }
+                }
+            }
+        }
     }
 }

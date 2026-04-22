@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dac522dad627c05498860a797f4c0ce1, type: 3}
+  m_Name: Tree
+  m_EditorClassIdentifier: Assembly-CSharp::MultiTileSO
+  id: 0
+  width: 3
+  height: 3
+  probability: 0.1
+  multiTiles:
+  - {fileID: 11400000, guid: f6f69a0a3150185489f5c887996a70e6, type: 2}
+  - {fileID: 11400000, guid: 1412afc6dc0cdb546a04ff0a1f05decc, type: 2}
+  - {fileID: 11400000, guid: d40ac8225780a2e4d887d711672c2958, type: 2}
+  - {fileID: 11400000, guid: 2d95cf36f27eb4b40a613f16701a2bd1, type: 2}
+  - {fileID: 11400000, guid: 4e6553f5bde30eb498294a75a1d3bac1, type: 2}
+  - {fileID: 11400000, guid: f2e3d3eac3260f84c8172297def593ae, type: 2}
+  - {fileID: 11400000, guid: 28370791be8b9b0468e5e2f521c0c6f7, type: 2}
+  - {fileID: 11400000, guid: caa447fed583b55429f7b9cf15778b74, type: 2}
+  - {fileID: 11400000, guid: 4b97ab3865c3e1c42b7b150bb8351426, type: 2}
+  tileHierarchies: 010000000100000001000000000000000000000000000000000000000000000000000000
+  terrainType: 01000000
+  minDistance: 3

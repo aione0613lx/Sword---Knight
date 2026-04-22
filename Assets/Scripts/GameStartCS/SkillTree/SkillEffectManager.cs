@@ -78,7 +78,7 @@ public class SkillEffectManager : SingletonMono<SkillEffectManager>
         }
     }
 
-    private void Awake() 
+    protected override void Awake() 
     {
         base.Awake();
         EventCenter.AddListener<PlayerHealth>(EventNameTable.ONSEEDPLAYERHEALTH,GainPlayerHealth);
@@ -128,7 +128,7 @@ public class SkillEffectManager : SingletonMono<SkillEffectManager>
         {
             switch(skillName)
             {
-                case "MaxHPBoost" : hpBoostLevel = data.level[index];
+                case "HPBoost" : hpBoostLevel = data.level[index];
                 break;
                 case "Posion" : posionLevel = data.level[index];
                 break;

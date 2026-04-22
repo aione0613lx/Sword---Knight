@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy_Lacner : MonoBehaviour
+public class Enemy_Lacner : EnemyController
 {   
     private enum LacnerState{
         Idel,
@@ -20,7 +20,6 @@ public class Enemy_Lacner : MonoBehaviour
     [SerializeField] private float attackGap = 2;
 
     private Transform player;
-    private Vector2 startPos;
     private bool isFacingRight = true;
     private bool isReturning = false;    // 是否正在返回起始点
     private LacnerState lacner = LacnerState.Idel;
@@ -28,7 +27,8 @@ public class Enemy_Lacner : MonoBehaviour
     private Animator anim;
 
     private void Awake()
-    {
+    {   
+        enemySO = Instantiate(enemySO);
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         startPos = transform.position;

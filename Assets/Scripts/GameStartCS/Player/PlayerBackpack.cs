@@ -25,7 +25,7 @@ public class PlayerBackpack : SingletonMono<PlayerBackpack>
 
     private void Start() 
     {   
-        gold = 10;
+        //gold = 10;
 
         Debug.Log(items.Count);
 
@@ -35,7 +35,7 @@ public class PlayerBackpack : SingletonMono<PlayerBackpack>
 
     public void LoadItem(PlayerBackpackSavaData data)
     {
-        gold = data.gold;
+        Gold = data.gold;
 
         int index = 0;
         foreach(var id in data.waresID)
