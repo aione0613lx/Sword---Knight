@@ -92,7 +92,7 @@ public class PlayerController : MonoBehaviour
         allowGuard = false;
         anim.Play("Guard");
         playerHealth.UpdateDefense(100);
-        StartCoroutine(StartDelaySetBool(3,"Guard"));
+        StartCoroutine(StartDelaySetBool(1.5f,"Guard"));
     }
 
     public void GuardEndHandle()
@@ -110,7 +110,7 @@ public class PlayerController : MonoBehaviour
         allowMove = false;
         allowAttack = false;
         anim.Play("Attack1");
-        StartCoroutine(StartDelaySetBool(3,"Attack"));
+        StartCoroutine(StartDelaySetBool(1.5f,"Attack"));
     }
 
     public void AttackEndHandle()
@@ -127,8 +127,9 @@ public class PlayerController : MonoBehaviour
         foreach(var hit in hits)
         {
             EnemyController enemy = hit.GetComponent<EnemyController>();
+            Debug.Log(enemy.gameObject.name);
             if(enemy != null)
-            {
+            {   
                 enemy.UpdateHP(-playerSO.damage);
             }
         }
@@ -142,8 +143,8 @@ public class PlayerController : MonoBehaviour
         allowAttack = false;
         allowGuard = false;
         anim.Play("Attack2");
-        StartCoroutine(StartDelaySetBool(6,"Attack"));
-        StartCoroutine(StartDelaySetBool(6,"Guard"));
+        StartCoroutine(StartDelaySetBool(3,"Attack"));
+        StartCoroutine(StartDelaySetBool(3,"Guard"));
     }
 
     public void EnhancedAttackEndHandle()

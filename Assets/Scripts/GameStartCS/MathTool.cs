@@ -40,7 +40,7 @@ public static class MathTool
         {
             case 0 : return "SO/Items/Beef";
             case 1 : return "SO/Items/KnightBadge";
-            case 2 : return "SO/Itesms/Gold";
+            case 2 : return "SO/Items/Gold";
             default :
             return "";
         }
@@ -85,6 +85,7 @@ public static class MathTool
         switch(id)
         {
             case 0 : return "Prefab/Enemys/Lancer";
+            case 1 : return "Prefab/Enemys/Torch";
             default :
             return "";
         }

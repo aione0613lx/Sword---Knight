@@ -72,7 +72,7 @@ public class ItemEffectManager : SingletonMono<ItemEffectManager>
     private bool GainGold()
     {
         PlayerBackpack.Instance.Gold += UnityEngine.Random.Range(5,10);
-        return false;
+        return true;
     }
 
     private void UseBadgeEnd()

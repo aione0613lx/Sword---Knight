@@ -4911,7 +4911,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemySOs:
-  - {fileID: 11400000, guid: 107f7b429b4f95441b472ba5475081c2, type: 2}
+  - {fileID: 11400000, guid: 11408ae99a8ae354eb336ee43cb918bf, type: 2}
   enemys: []
 --- !u!1 &1013587601
 GameObject:

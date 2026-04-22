@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3857296143865987106}
   - component: {fileID: 3857296143865987107}
   - component: {fileID: 2391046687401485793}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -190,7 +190,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1009359297195761834}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ACPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

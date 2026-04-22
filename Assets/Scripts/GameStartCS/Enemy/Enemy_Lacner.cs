@@ -73,9 +73,19 @@ public class Enemy_Lacner : EnemyController
             return;
         }
 
-        if(distanceToPlayer <= attckRange && allowAttack)
+        if(distanceToPlayer <= attckRange)
         {
-            Attack();
+            // 进入攻击距离后停止位移，避免持续顶着玩家产生推力
+            rb.velocity = Vector2.zero;
+
+            if (allowAttack)
+            {
+                Attack();
+            }
+            else
+            {
+                lacner = LacnerState.Idel;
+            }
             return;
         }
 

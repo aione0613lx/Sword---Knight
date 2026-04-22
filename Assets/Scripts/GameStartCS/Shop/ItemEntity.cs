@@ -44,6 +44,11 @@ public class ItemEntity : MonoBehaviour
         }
     }
 
+    private void Awake() 
+    {
+        count = 1;    
+    }
+
     private void Start() 
     {
         anim = GetComponent<Animator>();    
